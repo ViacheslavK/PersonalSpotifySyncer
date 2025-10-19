@@ -1,0 +1,7 @@
+{
+    "CLIENT_ID": "ваш_client_id_тут",
+    "CLIENT_SECRET": "ваш_client_secret_тут",
+    "REDIRECT_URI": "http://127.0.0.1:8888/callback",
+    "SOURCE_CACHE": ".cache-old-account",
+    "TARGET_CACHE": ".cache-work-account"
+}
