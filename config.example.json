@@ -1,6 +1,6 @@
 {
-    "CLIENT_ID": "ваш_client_id_тут",
-    "CLIENT_SECRET": "ваш_client_secret_тут",
+    "CLIENT_ID": "spotify_client_id_here",
+    "CLIENT_SECRET": "spotify_client_secret_here",
     "REDIRECT_URI": "http://127.0.0.1:8888/callback",
     "SOURCE_CACHE": ".cache-old-account",
     "TARGET_CACHE": ".cache-work-account"

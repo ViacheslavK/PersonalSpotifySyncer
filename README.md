@@ -1,130 +1,179 @@
 # Spotify Account Synchronizer
 
-Синхронізує улюблені треки, альбоми, плейлисти та артистів між двома акаунтами Spotify.
+Synchronizes liked tracks, albums, playlists, and artists between two Spotify accounts.
 
-## Що синхронізується
+## What Gets Synchronized
 
-- ✅ Улюблені треки (Liked Songs)
-- ✅ Збережені альбоми
-- ✅ Підписки на артистів
-- ✅ Всі плейлисти з усіма треками
+- ✅ Liked tracks (Liked Songs)
+- ✅ Saved albums
+- ✅ Followed artists
+- ✅ All playlists with all tracks
 
-## Що НЕ синхронізується
+## What Does NOT Get Synchronized
 
-- ❌ Історія прослуховування
-- ❌ Статистика (Top tracks, Top artists)
-- ❌ Рекомендації
+- ❌ Listening history
+- ❌ Statistics (Top tracks, Top artists)
+- ❌ Recommendations
 
-## Встановлення
+## Installation
 
-### 1. Встановіть залежності
+### 1. Install Dependencies
 
 ```bash
 pip install spotipy
 ```
 
-### 2. Створіть додаток у Spotify
+### 2. Create a Spotify App
 
-1. Перейдіть на https://developer.spotify.com/dashboard
-2. Натисніть "Create app"
-3. Заповніть:
-   - **App name**: будь-яка назва (наприклад, "My Sync Tool")
-   - **App description**: будь-який опис
+1. Go to https://developer.spotify.com/dashboard
+2. Click "Create app"
+3. Fill in:
+   - **App name**: any name (e.g., "My Sync Tool")
+   - **App description**: any description
    - **Redirect URIs**: `http://127.0.0.1:8888/callback`
-4. Збережіть **Client ID** та **Client Secret**
+4. Save your **Client ID** and **Client Secret**
 
-### 3. Налаштуйте конфігурацію
+### 3. Add Users to Your App
 
-При першому запуску програма автоматично створить файл `config.json`. Відредагуйте його:
+Since your app is in Development Mode, you need to add both accounts:
+
+1. In your app's Dashboard, go to **Settings**
+2. Find **"User Management"** section
+3. Click **"Add User"**
+4. Add **both** email addresses (source and target accounts)
+5. Save changes
+
+### 4. Configure the Application
+
+On first run, the program will automatically create a `config.json` file. Edit it:
 
 ```json
 {
-    "CLIENT_ID": "ваш_client_id_з_spotify_dashboard",
-    "CLIENT_SECRET": "ваш_client_secret_з_spotify_dashboard",
+    "CLIENT_ID": "your_client_id_from_spotify_dashboard",
+    "CLIENT_SECRET": "your_client_secret_from_spotify_dashboard",
     "REDIRECT_URI": "http://127.0.0.1:8888/callback",
-    "SOURCE_CACHE": ".cache-old-account",
-    "TARGET_CACHE": ".cache-work-account"
+    "SOURCE_CACHE": ".cache-source",
+    "TARGET_CACHE": ".cache-target"
 }
 ```
 
-Або скопіюйте `config.example.json` у `config.json` та заповніть своїми даними.
+Alternatively, copy `config.example.json` to `config.json` and fill in your credentials.
 
-## Використання
+## Usage
 
-Запустіть програму:
+Run the program:
 
 ```bash
 python spotify_sync.py
 ```
 
-### Перший запуск (авторизація)
+### First Run (Authentication)
 
-1. Програма покаже посилання для авторизації **старого акаунту**
-2. Скопіюйте посилання та відкрийте у браузері
-3. Увійдіть під старим акаунтом Spotify
-4. Після авторизації скопіюйте URL з адресного рядка (він буде починатись з `http://127.0.0.1:8888/callback?code=...`)
-5. Вставте URL назад у консоль
-6. Повторіть кроки 1-5 для **робочого акаунту**
+#### If No Accounts Are Authenticated Yet:
 
-### Наступні запуски
+1. The program will show an authorization link for the **source account**
+2. Copy the link and open it in your browser
+3. Log in to your source Spotify account
+4. After authorization, copy the URL from the browser's address bar (starts with `http://127.0.0.1:8888/callback?code=...`)
+5. Paste the URL back into the console
+6. Repeat steps 1-5 for the **target account**
 
-Програма використовує збережені токени - авторизація не потрібна! Просто запускаєте і вона синхронізує все автоматично.
+#### If Accounts Are Already Authenticated:
 
-## Структура проекту
+The program will show current account info and ask if you want to re-authenticate:
+
+```
+SOURCE account currently authenticated as:
+  Name: John Doe
+  User ID: abc123xyz
+  Email: john@example.com
+
+Do you want to re-authenticate the source account? (yes/no):
+```
+
+This allows you to easily switch accounts without manually deleting cache files.
+
+### Subsequent Runs
+
+The program uses saved tokens - no authentication needed! Just run it and it will synchronize everything automatically.
+
+### Confirmation Before Sync
+
+Before starting synchronization, the program will show the direction and ask for confirmation:
+
+```
+======================================================================
+SYNCHRONIZATION DIRECTION:
+  FROM: John Doe (ID: abc123, Email: john@example.com)
+  TO:   Jane Smith (ID: xyz789, Email: jane@work.com)
+======================================================================
+
+Proceed with synchronization? (yes/no):
+```
+
+## Project Structure
 
 ```
 spotify-sync/
-├── spotify_sync.py          # Основний код програми
-├── config.json              # Ваша конфігурація (НЕ комітити в Git!)
-├── config.example.json      # Приклад конфігурації
-├── .gitignore              # Ігнорує секрети
-├── README.md               # Ця документація
-├── .cache-old-account      # Токени старого акаунту (створюється автоматично)
-└── .cache-work-account     # Токени робочого акаунту (створюється автоматично)
+├── spotify_sync.py          # Main program code
+├── config.json              # Your configuration (DO NOT commit to Git!)
+├── config.example.json      # Configuration example
+├── .gitignore              # Protects secrets
+├── README.md               # This documentation
+├── .cache-source           # Source account tokens (auto-generated)
+└── .cache-target           # Target account tokens (auto-generated)
 ```
 
-## Безпека
+## Security
 
-⚠️ **ВАЖЛИВО**: Ніколи не комітьте в Git:
-- `config.json` - містить ваші секрети
-- `.cache-*` файли - містять токени доступу
+⚠️ **IMPORTANT**: Never commit to Git:
+- `config.json` - contains your secrets
+- `.cache-*` files - contain access tokens
 
-Файл `.gitignore` вже налаштований для захисту цих файлів.
+The `.gitignore` file is already configured to protect these files.
 
-## Автоматична синхронізація
+## Automated Synchronization
 
-Якщо потрібна регулярна синхронізація, налаштуйте cron (Linux/Mac) або Task Scheduler (Windows):
+If you need regular synchronization, set up cron (Linux/Mac) or Task Scheduler (Windows):
 
 ### Linux/Mac (cron)
 
 ```bash
-# Відкрийте crontab
+# Open crontab
 crontab -e
 
-# Додайте рядок (синхронізація кожні 6 годин)
-0 */6 * * * cd /шлях/до/проекту && python spotify_sync.py
+# Add a line (sync every 6 hours)
+0 */6 * * * cd /path/to/project && python spotify_sync.py
 ```
 
 ### Windows (Task Scheduler)
 
-1. Відкрийте Task Scheduler
-2. Створіть нову задачу
-3. Вкажіть тригер (наприклад, кожні 6 годин)
-4. Дія: запуск програми `python.exe` з аргументом `/шлях/до/spotify_sync.py`
+1. Open Task Scheduler
+2. Create a new task
+3. Set trigger (e.g., every 6 hours)
+4. Action: run program `python.exe` with argument `/path/to/spotify_sync.py`
 
 ## Troubleshooting
 
 ### "Redirect URI mismatch"
-- Перевірте що у Spotify Dashboard додано **точно** `http://127.0.0.1:8888/callback`
-- Перевірте що у `config.json` вказано той самий URI
+- Verify that **exactly** `http://127.0.0.1:8888/callback` is added in Spotify Dashboard
+- Check that the same URI is in `config.json`
 
 ### "Invalid client"
-- Перевірте CLIENT_ID та CLIENT_SECRET у `config.json`
-- Переконайтесь що немає зайвих пробілів
+- Check CLIENT_ID and CLIENT_SECRET in `config.json`
+- Make sure there are no extra spaces
 
-### Токени застаріли
-Видаліть файли `.cache-*` та запустіть програму знову для повторної авторизації.
+### "User may not be registered"
+- Your app is in Development Mode
+- Go to Spotify Dashboard → Your App → Settings → User Management
+- Add both account emails (source and target)
 
-## Ліцензія
+### Tokens expired
+Delete `.cache-*` files and run the program again to re-authenticate.
+
+### Email shows as "Unknown"
+This is normal - Spotify doesn't always return email depending on account privacy settings. The program shows User ID instead, which is always available and uniquely identifies each account.
+
+## License
 
 MIT
