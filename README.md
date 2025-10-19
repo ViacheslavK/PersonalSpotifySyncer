@@ -25,7 +25,7 @@ pip install spotipy
 
 ### 2. Create a Spotify App
 
-1. Go to https://developer.spotify.com/dashboard
+1. Go to <https://developer.spotify.com/dashboard>
 2. Click "Create app"
 3. Fill in:
    - **App name**: any name (e.g., "My Sync Tool")
@@ -69,7 +69,7 @@ python spotify_sync.py
 
 ### First Run (Authentication)
 
-#### If No Accounts Are Authenticated Yet:
+#### If No Accounts Are Authenticated Yet
 
 1. The program will show an authorization link for the **source account**
 2. Copy the link and open it in your browser
@@ -78,11 +78,11 @@ python spotify_sync.py
 5. Paste the URL back into the console
 6. Repeat steps 1-5 for the **target account**
 
-#### If Accounts Are Already Authenticated:
+#### If Accounts Are Already Authenticated
 
 The program will show current account info and ask if you want to re-authenticate:
 
-```
+```bash
 SOURCE account currently authenticated as:
   Name: John Doe
   User ID: abc123xyz
@@ -101,7 +101,7 @@ The program uses saved tokens - no authentication needed! Just run it and it wil
 
 Before starting synchronization, the program will show the direction and ask for confirmation:
 
-```
+```bash
 ======================================================================
 SYNCHRONIZATION DIRECTION:
   FROM: John Doe (ID: abc123, Email: john@example.com)
@@ -113,7 +113,7 @@ Proceed with synchronization? (yes/no):
 
 ## Project Structure
 
-```
+```bash
 spotify-sync/
 ├── spotify_sync.py          # Main program code
 ├── config.json              # Your configuration (DO NOT commit to Git!)
@@ -127,6 +127,7 @@ spotify-sync/
 ## Security
 
 ⚠️ **IMPORTANT**: Never commit to Git:
+
 - `config.json` - contains your secrets
 - `.cache-*` files - contain access tokens
 
@@ -156,22 +157,27 @@ crontab -e
 ## Troubleshooting
 
 ### "Redirect URI mismatch"
+
 - Verify that **exactly** `http://127.0.0.1:8888/callback` is added in Spotify Dashboard
 - Check that the same URI is in `config.json`
 
 ### "Invalid client"
+
 - Check CLIENT_ID and CLIENT_SECRET in `config.json`
 - Make sure there are no extra spaces
 
 ### "User may not be registered"
+
 - Your app is in Development Mode
 - Go to Spotify Dashboard → Your App → Settings → User Management
 - Add both account emails (source and target)
 
 ### Tokens expired
+
 Delete `.cache-*` files and run the program again to re-authenticate.
 
 ### Email shows as "Unknown"
+
 This is normal - Spotify doesn't always return email depending on account privacy settings. The program shows User ID instead, which is always available and uniquely identifies each account.
 
 ## License
